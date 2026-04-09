@@ -52,4 +52,15 @@ public class AlojamientoController {
         alojamientoRepository.deleteById(id);
         return "redirect:/";
     }
+
+    @GetMapping("/detalles/{id}")
+    public String verDetalles(@PathVariable String id, Model model) {
+        Alojamiento alojamiento = alojamientoRepository.findById(id).orElse(null);
+        if (alojamiento != null) {
+            model.addAttribute("alojamiento", alojamiento);
+            return "detalles"; // Crearemos detalles.html ahora
+        }
+        return "redirect:/";
+    }
+
 }

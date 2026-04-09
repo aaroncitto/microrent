@@ -36,7 +36,7 @@
                     <div class="d-flex gap-2">
                         <a th:href="@{/editar/{id}(id=${alojamiento.id})}"
                            class="btn btn-sm btn-warning text-white">Editar</a>
-
+                        <a th:href="@{/detalles/{id}(id=${alojamiento.id})}" class="btn btn-sm btn-outline-primary">Ver detalles</a>
                         <a th:href="@{/eliminar/{id}(id=${alojamiento.id})}"
                            class="btn btn-sm btn-danger"
                            onclick="return confirm('¿Borrar?')">Borrar</a>
