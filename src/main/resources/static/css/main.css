@@ -1,0 +1,4 @@
+/* Estilos base para que no pesen los HTML */
+body { background-color: #f8f9fa; padding-top: 56px; }
+.card-alojamiento { transition: transform 0.2s; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.card-alojamiento:hover { transform: scale(1.02); }
