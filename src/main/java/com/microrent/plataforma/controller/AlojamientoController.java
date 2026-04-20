@@ -1,8 +1,7 @@
 package com.microrent.plataforma.controller;
 
 import com.microrent.plataforma.model.Alojamiento;
-import com.microrent.plataforma.repository.AlojamientoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.microrent.plataforma.service.AlojamientoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,57 +9,57 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AlojamientoController {
 
-    @Autowired
-    private AlojamientoRepository alojamientoRepository;
+    private final AlojamientoService alojamientoService;
+
+    public AlojamientoController(AlojamientoService alojamientoService) {
+        this.alojamientoService = alojamientoService;
+    }
 
     @GetMapping("/")
-    public String verInicio(Model model) {
-        model.addAttribute("alojamientos", alojamientoRepository.findAll());
+    public String listarAlojamientos(Model model) {
+        model.addAttribute("alojamientos", alojamientoService.listarTodos());
         return "index";
     }
 
     @GetMapping("/nuevo")
     public String mostrarFormulario(Model model) {
-        // Importante: Mandamos un objeto totalmente vacío
         model.addAttribute("alojamiento", new Alojamiento());
         return "formulario";
     }
 
-    @GetMapping("/editar/{id}")
-    public String editar(@PathVariable String id, Model model) {
-        Alojamiento alojamiento = alojamientoRepository.findById(id).orElse(null);
-        if (alojamiento != null) {
-            model.addAttribute("alojamiento", alojamiento);
-            return "formulario";
-        }
+    @PostMapping("/")
+    public String guardarAlojamiento(@ModelAttribute("alojamiento") Alojamiento alojamiento) {
+        alojamientoService.guardar(alojamiento);
         return "redirect:/";
     }
 
-    @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Alojamiento alojamiento) {
-        // Si el ID llega como "" (vacío), forzamos a que sea null
-        // para que MongoDB genere uno nuevo obligatoriamente
-        if (alojamiento.getId() != null && alojamiento.getId().isEmpty()) {
-            alojamiento.setId(null);
-        }
-        alojamientoRepository.save(alojamiento);
-        return "redirect:/";
-    }
-
-    @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable String id) {
-        alojamientoRepository.deleteById(id);
-        return "redirect:/";
-    }
-
-    @GetMapping("/detalles/{id}")
+    @GetMapping("/{id}")
     public String verDetalles(@PathVariable String id, Model model) {
-        Alojamiento alojamiento = alojamientoRepository.findById(id).orElse(null);
-        if (alojamiento != null) {
-            model.addAttribute("alojamiento", alojamiento);
-            return "detalles"; // Crearemos detalles.html ahora
-        }
-        return "redirect:/";
+        Alojamiento alojamiento = alojamientoService.buscarPorId(id);
+        if (alojamiento == null) return "redirect:/";
+
+        model.addAttribute("alojamiento", alojamiento);
+        return "detalles";
     }
 
+    // ==========================================
+    // 🔥 NUEVAS RUTAS: EDITAR Y BORRAR 🔥
+    // ==========================================
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable String id, Model model) {
+        Alojamiento alojamiento = alojamientoService.buscarPorId(id);
+        if (alojamiento == null) return "redirect:/";
+
+        // Pasamos el alojamiento existente al formulario para que lo rellene
+        model.addAttribute("alojamiento", alojamiento);
+        return "formulario";
+    }
+
+    // Usamos POST para borrar por seguridad web
+    @PostMapping("/borrar/{id}")
+    public String borrarAlojamiento(@PathVariable String id) {
+        alojamientoService.borrarPorId(id);
+        return "redirect:/";
+    }
 }

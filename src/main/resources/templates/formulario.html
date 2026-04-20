@@ -2,53 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>MicroRent - Formulario</title>
+    <title>Formulario - MicroRent</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body class="bg-light">
-<div th:replace="~{fragments/layout :: navbar}"></div>
-<div class="container mt-5 pt-5">
+
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">🏠 MicroRent</a>
+    </div>
+</nav>
+
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6 bg-white p-4 shadow rounded">
-            <h2 class="mb-4 text-center" th:text="${alojamiento.id == null} ? 'Publicar Nuevo' : 'Editar Alojamiento'"></h2>
+        <div class="col-md-8">
+            <div class="card shadow border-0 p-4">
 
-            <form th:action="@{/guardar}" th:object="${alojamiento}" method="post">
-                <input type="hidden" th:field="*{id}">
+                <h3 class="mb-4 text-primary" th:text="${alojamiento.id == null ? 'Publicar un nuevo alojamiento' : 'Editar alojamiento'}"></h3>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Título</label>
-                    <input type="text" th:field="*{titulo}" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Ubicación</label>
-                    <input type="text" th:field="*{ubicacion}" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">URL de la Imagen</label>
-                    <input type="url" th:field="*{imagenUrl}" class="form-control">
-                </div>
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <label class="form-label fw-bold">Precio / noche</label>
-                        <input type="number" step="0.01" th:field="*{precioPorNoche}" class="form-control" required>
+                <form th:action="@{/}" th:object="${alojamiento}" method="post">
+
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Título del anuncio</label>
+                        <input type="text" th:field="*{titulo}" class="form-control" required>
                     </div>
-                    <div class="col-6 mb-3 d-flex align-items-end">
-                        <div class="form-check mb-2">
-                            <input type="checkbox" th:field="*{disponible}" class="form-check-input" id="disp">
-                            <label class="form-check-label" for="disp">Disponible</label>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ubicación (Ciudad)</label>
+                            <input type="text" th:field="*{ubicacion}" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Precio por noche (€)</label>
+                            <input type="number" step="0.01" th:field="*{precioPorNoche}" class="form-control" required>
                         </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Descripción</label>
-                    <textarea th:field="*{descripcion}" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success btn-lg">Guardar</button>
-                    <a href="/" class="btn btn-link text-muted">Cancelar</a>
-                </div>
-            </form>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Descripción</label>
+                        <textarea th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="mb-4 bg-light p-3 border rounded">
+                        <label class="form-label fw-bold text-primary">URL de la Foto de Portada</label>
+                        <input type="text" th:field="*{imagenPortada}" class="form-control" placeholder="https://ejemplo.com/foto-principal.jpg">
+                        <div class="form-text text-muted">
+                            Esta será la imagen principal que verán los usuarios en la lista de búsqueda.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">URLs de las imágenes (Carrusel interior)</label>
+                        <textarea th:field="*{imagenes}" class="form-control" rows="3" placeholder="https://url-foto1.jpg, https://url-foto2.jpg"></textarea>
+                        <div class="form-text text-muted">
+                            Para añadir varias fotos, pega las direcciones de internet separadas por una <b>coma</b>.
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/}" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-5" th:text="${alojamiento.id == null ? 'Guardar' : 'Actualizar'}"></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -4,50 +4,55 @@
     <meta charset="UTF-8">
     <title>MicroRent - Inicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <style>
-        /* Un pequeño parche para que las fotos no se vean mal si fallan */
-        .card-img-top { background-color: #e9ecef; min-height: 200px; }
-    </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<body class="bg-light">
 
-<div class="container mt-5 pt-5 flex-grow-1">
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">🏠 MicroRent</a>
+    </div>
+</nav>
+
+<div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Alojamientos Disponibles</h1>
-        <span class="badge bg-dark" th:text="${alojamientos.size()} + ' encontrados'"></span>
+        <h2>Alojamientos Disponibles</h2>
+        <a th:href="@{/nuevo}" class="btn btn-success fw-bold">+ Nuevo Alojamiento</a>
+    </div>
+
+    <div th:if="${alojamientos.isEmpty()}" class="alert alert-warning text-center shadow-sm">
+        Todavía no hay alojamientos publicados. ¡Sé el primero en crear uno!
     </div>
 
     <div class="row">
-        <div class="col-md-4 mb-4" th:each="alojamiento : ${alojamientos}">
+        <div class="col-md-4 mb-4" th:each="acc : ${alojamientos}">
             <div class="card h-100 shadow-sm border-0">
-                <img th:src="${alojamiento.imagenUrl != null && !alojamiento.imagenUrl.isEmpty()} ? ${alojamiento.imagenUrl} : 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400&h=250'"
-                     class="card-img-top" alt="Alojamiento" style="height: 200px; object-fit: cover;">
 
-                <div class="card-body">
-                    <span th:if="${alojamiento.disponible}" class="badge bg-success mb-2">Disponible</span>
-                    <span th:unless="${alojamiento.disponible}" class="badge bg-secondary mb-2">No disponible</span>
+                <img th:if="${acc.imagenPortada != null and !acc.imagenPortada.isEmpty()}"
+                     th:src="${acc.imagenPortada}"
+                     class="card-img-top" alt="Portada" style="height: 200px; object-fit: cover;">
 
-                    <h5 class="card-title fw-bold" th:text="${alojamiento.titulo}">Nombre</h5>
-                    <p class="text-muted small" th:text="${alojamiento.ubicacion}">Ubicación</p>
-                    <p class="fw-bold text-primary mb-3" th:text="${alojamiento.precioPorNoche} + '€ / noche'"></p>
+                <div th:unless="${acc.imagenPortada != null and !acc.imagenPortada.isEmpty()}"
+                     class="card-img-top bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center" style="height: 200px;">
+                    <span style="font-size: 3rem; color: #adb5bd;">🏠</span>
+                </div>
 
-                    <div class="d-flex gap-2">
-                        <a th:href="@{/editar/{id}(id=${alojamiento.id})}"
-                           class="btn btn-sm btn-warning text-white">Editar</a>
-                        <a th:href="@{/detalles/{id}(id=${alojamiento.id})}" class="btn btn-sm btn-outline-primary">Ver detalles</a>
-                        <a th:href="@{/eliminar/{id}(id=${alojamiento.id})}"
-                           class="btn btn-sm btn-danger"
-                           onclick="return confirm('¿Borrar?')">Borrar</a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-truncate" th:text="${acc.titulo}">Título</h5>
+                    <p class="card-text text-muted mb-2" th:text="${acc.ubicacion}">Ubicación</p>
+                    <p class="card-text fs-4 fw-bold mt-auto"><span th:text="${acc.precioPorNoche}">0</span>€ <small class="text-muted fw-normal fs-6">/ noche</small></p>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <a th:href="@{/{id}(id=${acc.id})}" class="btn btn-outline-primary w-100">Detalles</a>
+                        <a th:href="@{/editar/{id}(id=${acc.id})}" class="btn btn-outline-warning" title="Editar">✏️</a>
+
+                        <form th:action="@{/borrar/{id}(id=${acc.id})}" method="post" class="m-0">
+                            <button type="submit" class="btn btn-outline-danger" title="Borrar" onclick="return confirm('¿Seguro que quieres borrar este alojamiento?');">🗑️</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<div th:replace="~{fragments/layout :: footer}"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
