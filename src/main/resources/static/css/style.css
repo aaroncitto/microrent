@@ -1,0 +1,30 @@
+/* Importamos la fuente 'Inter' de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Aplicamos la fuente a toda la web */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f7f9; /* Un gris muuuy suave, mejor que el blanco puro */
+}
+
+/* Color corporativo de MicroRent (Estilo Airbnb) */
+.text-brand { color: #ff385c !important; }
+.bg-brand { background-color: #ff385c !important; color: white; }
+.btn-brand { background-color: #ff385c; color: white; font-weight: 600; border-radius: 8px; transition: all 0.3s; }
+.btn-brand:hover { background-color: #d90b34; color: white; transform: scale(1.02); }
+
+/* Efecto Hover para las tarjetas de alojamiento */
+.card-alojamiento {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 12px;
+    border: none;
+    overflow: hidden;
+}
+
+.card-alojamiento:hover {
+    transform: translateY(-5px); /* Sube la tarjeta 5 pixeles */
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important; /* Sombra más pronunciada */
+}
+
+/* Esquinas redondeadas suaves para las imágenes */
+.img-rounded { border-radius: 12px; }
