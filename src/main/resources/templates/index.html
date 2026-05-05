@@ -2,51 +2,73 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>MicroRent - Inicio</title>
+    <title>MicroRent - Alojamientos únicos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-light">
+<body>
 
-<nav class="navbar navbar-dark bg-primary mb-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top mb-5 py-3">
     <div class="container">
-        <a class="navbar-brand fw-bold" th:href="@{/}">🏠 MicroRent</a>
+        <a class="navbar-brand fw-bold fs-4 text-brand d-flex align-items-center gap-2" th:href="@{/}">
+            <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#ff385c" />
+                <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="'Inter', sans-serif" font-weight="800" font-size="42">MR</text>
+            </svg>
+            <span style="letter-spacing: -1px;">MicroRent</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a th:href="@{/nuevo}" class="btn btn-outline-dark fw-bold rounded-pill px-4 d-none d-sm-block">Pon tu espacio</a>
+            <form th:action="@{/logout}" method="post" class="m-0">
+                <button type="submit" class="btn btn-light border text-muted rounded-pill px-3 fw-bold small">Cerrar sesión</button>
+            </form>
+        </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Alojamientos Disponibles</h2>
-        <a th:href="@{/nuevo}" class="btn btn-success fw-bold">+ Nuevo Alojamiento</a>
+<div class="container pb-5">
+    <div class="mb-4">
+        <h2 class="fw-bold">Alojamientos de ensueño</h2>
+        <p class="text-muted">Descubre espacios únicos para tu próxima escapada.</p>
     </div>
 
-    <div th:if="${alojamientos.isEmpty()}" class="alert alert-warning text-center shadow-sm">
-        Todavía no hay alojamientos publicados. ¡Sé el primero en crear uno!
+    <!-- Alerta sin alojamientos -->
+    <div th:if="${alojamientos.isEmpty()}" class="alert alert-light text-center p-5 shadow-sm rounded-4 border">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#dee2e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+        </svg>
+        <h4 class="fw-bold text-dark">Aún no hay destinos disponibles</h4>
+        <p class="text-muted">Sé el primero en compartir la magia de tu alojamiento.</p>
     </div>
 
     <div class="row">
-        <div class="col-md-4 mb-4" th:each="acc : ${alojamientos}">
-            <div class="card h-100 shadow-sm border-0">
-
+        <div class="col-md-4 mb-5" th:each="acc : ${alojamientos}">
+            <div class="card h-100 shadow-sm card-alojamiento border-0" style="border-radius: 16px; overflow: hidden;">
                 <img th:if="${acc.imagenPortada != null and !acc.imagenPortada.isEmpty()}"
                      th:src="${acc.imagenPortada}"
-                     class="card-img-top" alt="Portada" style="height: 200px; object-fit: cover;">
+                     class="card-img-top" alt="Portada" style="height: 250px; object-fit: cover;">
 
                 <div th:unless="${acc.imagenPortada != null and !acc.imagenPortada.isEmpty()}"
-                     class="card-img-top bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center" style="height: 200px;">
-                    <span style="font-size: 3rem; color: #adb5bd;">🏠</span>
+                     class="card-img-top bg-light d-flex justify-content-center align-items-center" style="height: 250px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#dee2e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                 </div>
 
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-truncate" th:text="${acc.titulo}">Título</h5>
-                    <p class="card-text text-muted mb-2" th:text="${acc.ubicacion}">Ubicación</p>
-                    <p class="card-text fs-4 fw-bold mt-auto"><span th:text="${acc.precioPorNoche}">0</span>€ <small class="text-muted fw-normal fs-6">/ noche</small></p>
-
-                    <div class="d-flex gap-2 mt-3">
-                        <a th:href="@{/{id}(id=${acc.id})}" class="btn btn-outline-primary w-100">Detalles</a>
-                        <a th:href="@{/editar/{id}(id=${acc.id})}" class="btn btn-outline-warning" title="Editar">✏️</a>
-
+                <div class="card-body d-flex flex-column p-4">
+                    <h5 class="card-title fw-bold text-truncate" th:text="${acc.titulo}"></h5>
+                    <p class="card-text text-muted mb-3 small" th:text="${acc.ubicacion}"></p>
+                    <p class="card-text fs-5 mt-auto fw-bold"><span th:text="${acc.precioPorNoche}"></span>€ <small class="text-muted fw-normal fs-6">noche</small></p>
+                    <hr class="opacity-25">
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/{id}(id=${acc.id})}" class="btn btn-dark w-100 fw-bold rounded-3">Detalles</a>
+                        <a th:href="@{/editar/{id}(id=${acc.id})}" class="btn btn-outline-secondary px-3" title="Editar">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </a>
                         <form th:action="@{/borrar/{id}(id=${acc.id})}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-outline-danger" title="Borrar" onclick="return confirm('¿Seguro que quieres borrar este alojamiento?');">🗑️</button>
+                            <button type="submit" class="btn btn-outline-danger px-3" title="Borrar" onclick="return confirm('¿Seguro que quieres borrarlo?');">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -54,5 +76,7 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
